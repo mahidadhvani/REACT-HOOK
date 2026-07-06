@@ -1,0 +1,49 @@
+import { createContext, useContext, useReducer } from "react";
+
+const ThemeContext = createContext(null);
+
+function themeReducer(state, action) {
+  switch (action.type) {
+    case "TOGGLE_THEME":
+      return state === "light" ? "dark" : "light";
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+}
+
+function ThemeProvider({ children }) {
+  const [theme, dispatch] = useReducer(themeReducer, "light");
+
+  return (
+    <ThemeContext.Provider value={{ theme, dispatch }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+function Header() {
+  const { theme, dispatch } = useContext(ThemeContext);
+
+  return (
+    <header style={{
+      background: theme === "light" ? "#fff" : "#222",
+      color: theme === "light" ? "#000" : "#fff",
+      padding: 16,
+    }}>
+      <h2>Current theme: {theme}</h2>
+      <button onClick={() => dispatch({ type: "TOGGLE_THEME" })}>
+        Toggle Theme
+      </button>
+    </header>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <Header />
+    </ThemeProvider>
+  );
+}
+
+export default App;
