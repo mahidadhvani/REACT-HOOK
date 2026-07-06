@@ -1,0 +1,23 @@
+// store.js
+import { createStore } from "redux";
+import playlistReducer from "./playlistReducer";
+
+const store = createStore(playlistReducer);
+
+export default store;
+
+
+
+// index.js — wrap the app with Provider so any component can access the store
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import store from "./store";
+import App from "./App";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
