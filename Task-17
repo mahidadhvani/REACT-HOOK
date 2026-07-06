@@ -1,0 +1,76 @@
+import { useState } from "react";
+
+function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitted, setSubmitted] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted({ email, password });
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Log In</button>
+      </form>
+
+      {submitted && (
+        <p>
+          Submitted — Email: {submitted.email}, Password: {submitted.password}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default LoginForm;
+
+
+
+import { Formik, Form, Field } from "formik";
+import { useState } from "react";
+
+function LoginForm() {
+  const [submitted, setSubmitted] = useState(null);
+
+  return (
+    <div>
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => {
+          setSubmitted(values);
+        }}
+      >
+        {({ values, handleChange }) => (
+          <Form>
+            <Field type="email" name="email" placeholder="Email" onChange={handleChange} value={values.email} />
+            <Field type="password" name="password" placeholder="Password" onChange={handleChange} value={values.password} />
+            <button type="submit">Log In</button>
+          </Form>
+        )}
+      </Formik>
+
+      {submitted && (
+        <p>
+          Submitted — Email: {submitted.email}, Password: {submitted.password}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export default LoginForm;
