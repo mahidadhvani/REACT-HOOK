@@ -1,0 +1,72 @@
+import { useState, useEffect } from "react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase";
+
+function Navbar() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoadingAuth(false);
+    });
+
+    return () => unsubscribe(); // avoid memory leaks / stale listeners on unmount
+  }, []);
+
+  if (loadingAuth) return <nav>Loading...</nav>;
+
+  return (
+    <nav>
+      <span>
+        {currentUser ? `Welcome, ${currentUser.email}` : "Welcome, Guest"}
+      </span>
+    </nav>
+  );
+}
+
+export default Navbar;
+
+
+
+import { useState, useEffect } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./firebase";
+
+function Navbar() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setLoadingAuth(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // no need to manually setCurrentUser(null) — onAuthStateChanged
+      // fires automatically after signOut() resolves and updates state for us
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    }
+  };
+
+  if (loadingAuth) return <nav>Loading...</nav>;
+
+  return (
+    <nav>
+      <span>
+        {currentUser ? `Welcome, ${currentUser.email}` : "Welcome, Guest"}
+      </span>
+      {currentUser && <button onClick={handleLogout}>Logout</button>}
+    </nav>
+  );
+}
+
+export default Navbar;
+
