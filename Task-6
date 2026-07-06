@@ -1,0 +1,74 @@
+import { useEffect, useRef } from "react";
+
+// Generate 1000 sample products once, outside the component,
+// so we're not regenerating them on every render.
+const products = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+  price: (Math.random() * 1000).toFixed(2),
+}));
+
+function ProductList() {
+  const renderStart = useRef(performance.now());
+
+  useEffect(() => {
+    const renderTime = performance.now() - renderStart.current;
+    console.log(`ProductList rendered in ${renderTime.toFixed(2)}ms`);
+  });
+
+  return (
+    <ul>
+      {products.map(product => (
+        <li key={product.id}>
+          {product.name} — ${product.price}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default ProductList;
+
+
+
+import { useState, useMemo } from "react";
+
+const products = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+  price: (Math.random() * 1000).toFixed(2),
+}));
+
+function ProductList() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Without useMemo, this filter would re-run on EVERY render of
+  // ProductList, even ones caused by unrelated state changes.
+  // useMemo only recalculates when products or searchTerm actually change.
+  const filteredProducts = useMemo(() => {
+    console.log("Filtering products..."); // watch how often this logs
+    return products.filter(product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [products, searchTerm]);
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <ul>
+        {filteredProducts.map(product => (
+          <li key={product.id}>
+            {product.name} — ${product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default ProductList;
