@@ -1,0 +1,84 @@
+const products = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+  price: (Math.random() * 1000).toFixed(2),
+}));
+
+function ProductList() {
+  return (
+    <div style={{ height: "400px", overflowY: "scroll", border: "1px solid #ccc" }}>
+      <ul>
+        {products.map(product => (
+          <li key={product.id}>
+            {product.name} — ${product.price}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default ProductList;
+
+
+
+import { useMemo } from "react";
+
+const products = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+  price: (Math.random() * 1000).toFixed(2),
+}));
+
+function ProductList() {
+  // Memoize the JSX list itself, not just the data. This means React
+  // doesn't have to re-run .map() and rebuild 1000 <li> elements
+  // unless `products` actually changes.
+  const productElements = useMemo(() => {
+    console.log("Building product list elements...");
+    return products.map(product => (
+      <li key={product.id}>
+        {product.name} — ${product.price}
+      </li>
+    ));
+  }, [products]);
+
+  return (
+    <div style={{ height: "400px", overflowY: "scroll", border: "1px solid #ccc" }}>
+      <ul>{productElements}</ul>
+    </div>
+  );
+}
+
+export default ProductList;
+
+
+import { useMemo } from "react";
+
+const products = Array.from({ length: 1000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+  price: (Math.random() * 1000).toFixed(2),
+}));
+
+function ProductList() {
+  // Memoize the JSX list itself, not just the data. This means React
+  // doesn't have to re-run .map() and rebuild 1000 <li> elements
+  // unless `products` actually changes.
+  const productElements = useMemo(() => {
+    console.log("Building product list elements...");
+    return products.map(product => (
+      <li key={product.id}>
+        {product.name} — ${product.price}
+      </li>
+    ));
+  }, [products]);
+
+  return (
+    <div style={{ height: "400px", overflowY: "scroll", border: "1px solid #ccc" }}>
+      <ul>{productElements}</ul>
+    </div>
+  );
+}
+
+export default ProductList;
