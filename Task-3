@@ -1,0 +1,129 @@
+import { useState, useEffect } from "react";
+
+const API_KEY = "YOUR_API_KEY";
+
+function useSearchMovies(query) {
+  const [movies, setMovies] = useState(null);
+
+  useEffect(() => {
+    async function fetchMovies() {
+      const res = await fetch(
+        `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+      );
+      const json = await res.json();
+      setMovies(json.Search);
+    }
+
+    fetchMovies();
+  }, [query]);
+
+  return movies;
+}
+
+
+import { useState, useEffect } from "react";
+
+const API_KEY = "YOUR_API_KEY";
+
+function useSearchMovies(query) {
+  const [movies, setMovies] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchMovies() {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+        );
+        const json = await res.json();
+
+        if (json.Response === "False") {
+          throw new Error(json.Error || "No movies found");
+        }
+        setMovies(json.Search);
+      } catch (err) {
+        setError(err.message);
+        setMovies(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchMovies();
+  }, [query]);
+
+  return { movies, loading, error };
+}
+
+function MovieSearch({ query }) {
+  const { movies, loading, error } = useSearchMovies(query);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <ul>
+      {movies?.map(movie => (
+        <li key={movie.imdbID}>{movie.Title}</li>
+      ))}
+    </ul>
+  );
+}
+
+
+
+
+
+import { useState, useEffect } from "react";
+
+const API_KEY = "YOUR_API_KEY";
+
+function useSearchMovies(query) {
+  const [movies, setMovies] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!query) {
+      setMovies(null);
+      setError(null);
+      return;
+    }
+
+    let isCancelled = false;
+
+    async function fetchMovies() {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`
+        );
+        const json = await res.json();
+
+        if (json.Response === "False") {
+          throw new Error(json.Error || "No movies found");
+        }
+        if (!isCancelled) setMovies(json.Search);
+      } catch (err) {
+        if (!isCancelled) {
+          setError(err.message);
+          setMovies(null);
+        }
+      } finally {
+        if (!isCancelled) setLoading(false);
+      }
+    }
+
+    fetchMovies();
+
+    return () => {
+      isCancelled = true; // ignore this fetch's result if query changes again before it resolves
+    };
+  }, [query]);
+
+  return { movies, loading, error };
+}
