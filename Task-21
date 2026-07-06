@@ -1,0 +1,24 @@
+function MovieSearch({ movies }) {
+  const [query, setQuery] = useState("");
+
+  // New array every render — even movies unrelated to typing re-render
+  const filtered = movies.filter((m) =>
+    m.title.toLowerCase().includes(query.toLowerCase())
+  );
+
+  return (
+    <div>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <MovieList movies={filtered} />
+    </div>
+  );
+}
+
+function MovieList({ movies }) {
+  console.log("MovieList rendered"); // fires on every keystroke, even when filtered result is identical
+  return (
+    <ul>
+      {movies.map((m) => <li key={m.id}>{m.title}</li>)}
+    </ul>
+  );
+}
