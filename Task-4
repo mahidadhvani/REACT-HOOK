@@ -1,0 +1,63 @@
+import { useReducer } from "react";
+
+function playlistReducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: state.count - 1 };
+    case "reset":
+      return { count: 0 };
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+}
+
+function PlaylistCounter() {
+  const [state, dispatch] = useReducer(playlistReducer, { count: 0 });
+
+  return (
+    <div>
+      <h3>Songs in playlist: {state.count}</h3>
+      <button onClick={() => dispatch({ type: "increment" })}>+ Add Song</button>
+      <button onClick={() => dispatch({ type: "decrement" })}>- Remove Song</button>
+      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
+    </div>
+  );
+}
+
+
+
+
+import { useReducer } from "react";
+
+function playlistReducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+    case "decrement":
+      return { count: Math.max(0, state.count - 1) }; // never go below 0
+    case "reset":
+      return { count: 0 };
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+}
+
+function PlaylistCounter() {
+  const [state, dispatch] = useReducer(playlistReducer, { count: 0 });
+
+  return (
+    <div>
+      <h3>Songs in playlist: {state.count}</h3>
+      <button onClick={() => dispatch({ type: "increment" })}>+ Add Song</button>
+      <button
+        onClick={() => dispatch({ type: "decrement" })}
+        disabled={state.count === 0}
+      >
+        - Remove Song
+      </button>
+      <button onClick={() => dispatch({ type: "reset" })}>Reset</button>
+    </div>
+  );
+}
