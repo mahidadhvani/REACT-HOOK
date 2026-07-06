@@ -1,0 +1,32 @@
+// playlistSlice.js
+import { createSlice } from "@reduxjs/toolkit";
+
+const playlistSlice = createSlice({
+  name: "playlist",
+  initialState: {
+    songs: [],
+  },
+  reducers: {
+    // Redux Toolkit lets us "mutate" state directly here — under the
+    // hood it uses Immer to produce an immutable update safely.
+    addSong: (state, action) => {
+      state.songs.push(action.payload);
+    },
+  },
+});
+
+export const { addSong } = playlistSlice.actions;
+export default playlistSlice.reducer;
+
+
+// store.js
+import { configureStore } from "@reduxjs/toolkit";
+import playlistReducer from "./playlistSlice";
+
+const store = configureStore({
+  reducer: {
+    playlist: playlistReducer,
+  },
+});
+
+export default store;
