@@ -1,0 +1,54 @@
+// store.js
+import { configureStore } from "@reduxjs/toolkit";
+
+const store = configureStore({
+  reducer: {
+    // slices will be added here (playlistSlice in Task 3)
+  },
+});
+
+export default store;
+
+
+import { useState } from "react";
+
+function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Placeholder auth check — real validation/auth comes in a later session
+    if (email.trim() && password.trim()) {
+      setIsLoggedIn(true);
+    }
+  };
+
+  if (isLoggedIn) {
+    return <h2>Welcome, {email}!</h2>;
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Log In</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Log In</button>
+    </form>
+  );
+}
+
+export default LoginForm;
