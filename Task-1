@@ -1,0 +1,33 @@
+function PlaylistCard({ songName, artist }) {
+  return (
+    <div className="card">
+      <h3>{songName}</h3>
+      <p>{artist}</p>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <PlaylistCard songName="Blinding Lights" artist="The Weeknd" />
+      <PlaylistCard songName="Levitating" artist="Dua Lipa" />
+      <PlaylistCard songName="As It Was" artist="Harry Styles" />
+    </div>
+  );
+}
+
+import { useState } from "react";
+
+function LikeCounter() {
+  const [likes, setLikes] = useState(0);
+
+  const handleLike = () => setLikes(prev => prev + 1);
+
+  return (
+    <div>
+      <p>❤️ {likes} likes</p>
+      <button onClick={handleLike}>Like</button>
+    </div>
+  );
+}
