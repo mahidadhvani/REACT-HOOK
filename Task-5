@@ -1,0 +1,70 @@
+// playlistReducer.js
+function playlistReducer(state, action) {
+  switch (action.type) {
+    case "ADD_SONG":
+      return [...state, { id: Date.now(), name: action.payload }];
+
+    case "REMOVE_SONG":
+      return state.filter(song => song.id !== action.payload);
+
+    default:
+      throw new Error(`Unknown action: ${action.type}`);
+  }
+}
+
+export default playlistReducer;
+
+
+import { useReducer, useState } from "react";
+import playlistReducer from "./playlistReducer";
+
+function PlaylistManager() {
+  const [songs, dispatch] = useReducer(playlistReducer, []);
+  const [songName, setSongName] = useState("");
+
+  const handleAdd = () => {
+    if (!songName.trim()) return;
+    dispatch({ type: "ADD_SONG", payload: songName });
+    setSongName("");
+  };
+
+  return (
+    <div>
+      <h2>My Playlist</h2>
+
+      <input
+        type="text"
+        value={songName}
+        onChange={(e) => setSongName(e.target.value)}
+        placeholder="Enter song name"
+      />
+      <button onClick={handleAdd}>Add</button>
+
+      <ul>
+        {songs.map(song => (
+          <li key={song.id}>{song.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default PlaylistManager;
+
+
+
+// playlistReducer.js — unchanged, already handles ADD_SONG and REMOVE_SONG
+
+// SongItem.jsx
+function SongItem({ song, dispatch }) {
+  return (
+    <li>
+      {song.name}
+      <button onClick={() => dispatch({ type: "REMOVE_SONG", payload: song.id })}>
+        Delete
+      </button>
+    </li>
+  );
+}
+
+export default SongItem;
