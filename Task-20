@@ -1,0 +1,32 @@
+npm install -g firebase-tools
+firebase login
+npm run build
+firebase init hosting
+# When prompted: set public directory to "build", configure as single-page app: Yes
+firebase deploy
+
+
+// App.js
+import React, { Suspense } from "react";
+
+// Instead of a static import, React.lazy() loads this component's
+// code in a separate chunk, only when it's actually needed —
+// keeping it out of the main bundle that loads on first visit.
+const Watchlist = React.lazy(() => import("./Watchlist"));
+
+function App() {
+  return (
+    <div>
+      <h1>Movie Watchlist</h1>
+      {/* Suspense shows a fallback while the lazy chunk downloads */}
+      <Suspense fallback={<p>Loading watchlist...</p>}>
+        <Watchlist />
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+
+
+
