@@ -1,0 +1,22 @@
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY, // no longer hardcoded
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef",
+};
+
+const app = initializeApp(firebaseConfig);
+export default app;
+
+
+# Development — reads .env.development automatically
+npm start
+
+# Production — reads .env.production automatically, since npm run build
+# sets NODE_ENV=production internally
+npm run build
+npx serve -s build
